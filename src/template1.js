@@ -1,5 +1,5 @@
-import {data} from "data";
-import {TYPE} from "constants";
+import {TYPE} from "./constants";
+import {data} from "./data";
 
 
 const texts = [];
@@ -15,3 +15,16 @@ data.paragraphs.forEach(
     }
 )
 
+const main = document.getElementById("main");
+
+
+const createTextDiv = (content) => {
+    return "<div>content</div>"
+}
+
+const createImgDiv = (content) => {
+    return "<img src='content'/>"
+}
+
+const textDiv = '<div>' + '</div>'
+main.innerHTML = createTextDiv("dd")
