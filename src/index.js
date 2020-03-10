@@ -13,7 +13,9 @@ data.paragraphs.forEach(
             imgs.push(value)
         }
     }
-)
+);
+
+const sections = texts.concat(imgs);
 
 const margin = 50;
 const gap = 25;
@@ -30,12 +32,22 @@ const virtual = document.getElementById("virtual");
 virtual.style.width = columnWidth + "px";
 
 const createTextDiv = (context) => {
-    return `<div class="text">${context}</div>`
+    return `<div class="section">${context}</div>`
 }
 
 const createImgDiv = (context) => {
-    return "<img src='context'/>"
+    return `<img class='section' src=${context}/>`
 }
+
+const createSectionDiv = (item) => {
+    if (item.type === TYPE.img) {
+        console.log('dd');
+        return createImgDiv(item.context);
+    }
+    if (item.type === TYPE.text)
+        return createTextDiv(item.context);
+}
+
 
 const colums = [];
 const innerHtml = '';
@@ -46,15 +58,15 @@ const getHeight = (innerHtml) => {
     console.log('height', height);
 }
 
-const setColumnWidth = (column, columnWidth)=>{
+const setColumnWidth = (column, columnWidth) => {
     column.style.width = columnWidth + "px";
 }
 
-const renderTexts = (texts) => {
-    const textsDiv = texts.reduce((pre, item) => pre + createTextDiv(item.context), '');
-    column.innerHTML = textsDiv;
+const renderSections = (sections) => {
+    const sectionsDiv = sections.reduce((pre, item) => pre + createSectionDiv(item), '');
+    column.innerHTML = sectionsDiv;
 
 }
 
 setColumnWidth(column, columnWidth);
-renderTexts(texts);
+renderSections(sections);
