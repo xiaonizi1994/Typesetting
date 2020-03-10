@@ -15,31 +15,46 @@ data.paragraphs.forEach(
     }
 )
 
-const body = document.getElementsByTagName("body")[0];
-const mainHtml = "<div id ='main'></div>"
-const virtualHtml = "<div id ='virtual'></div>"
-body.innerHTML = mainHtml + virtualHtml;
+const margin = 50;
+const gap = 25;
+const columnWidth = (document.body.clientWidth) / 2 - margin - gap;
 
-const main = document.getElementById("main");
+const body = document.getElementsByTagName("body")[0];
+const columnHtml = "<div id ='column'></div>"
+const virtualHtml = "<div id = 'virtual'></div>"
+body.innerHTML = columnHtml + virtualHtml;
+
+const column = document.getElementById("column");
 const virtual = document.getElementById("virtual");
 
-const createTextDiv = (content) => {
-    return `<div>${content}</div>`
+virtual.style.width = columnWidth + "px";
+
+const createTextDiv = (context) => {
+    return `<div class="text">${context}</div>`
 }
 
-const createImgDiv = (content) => {
-    return "<img src='content'/>"
+const createImgDiv = (context) => {
+    return "<img src='context'/>"
 }
 
 const colums = [];
 const innerHtml = '';
 
-main.innerHTML = createTextDiv("dd");
-
-const getHeight = (innerHtml)=>{
+const getHeight = (innerHtml) => {
     virtual.innerHTML = innerHtml;
-    const height = main.offsetHeight;
+    const height = column.offsetHeight;
     console.log('height', height);
 }
 
-getHeight(createTextDiv("dd"));
+const setColumnWidth = (column, columnWidth)=>{
+    column.style.width = columnWidth + "px";
+}
+
+const renderTexts = (texts) => {
+    const textsDiv = texts.reduce((pre, item) => pre + createTextDiv(item.context), '');
+    column.innerHTML = textsDiv;
+
+}
+
+setColumnWidth(column, columnWidth);
+renderTexts(texts);
