@@ -17,6 +17,9 @@ export class Page {
     }
 
     createLeftColumn(leftColumns) {
+        if(!leftColumns){
+            return "";
+        }
         const leftSectionsHtml = leftColumns.sections.reduce((pre, section) => pre + section.html, "");
         return `
             <div class="left" style="width:${COLUMN_WIDTH}px">

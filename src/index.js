@@ -1,7 +1,7 @@
 import {TYPE} from "./constants";
 import {data} from "./data";
 import {Page} from "./class/Pages";
-import {COLUMN_HEIGHT, COLUMN_WIDTH, createSectionDiv} from "./utils/renderUtil";
+import {COLUMN_HEIGHT, COLUMN_WIDTH, createSectionDiv, createTextDiv} from "./utils/renderUtil";
 
 
 const texts = [];
@@ -43,7 +43,8 @@ const sections = texts.concat(imgs)
         return {
             height,
             html,
-            type: item.type
+            type: item.type,
+            context: item.context,
         }
     });
 console.log("section", sections);
@@ -67,8 +68,30 @@ const setColumnWidth = (column, columnWidth) => {
 //             })
 // }
 
-const splitSection = (section, remainHeight) =>{
-
+const splitSection = (column, text) => {
+    let splitText = text;
+    let textDiv = createTextDiv(splitText)
+    let height = getHeight(textDiv);
+    let index = 0;
+    while (isFull(COLUMN_HEIGHT, column, height)) {
+        splitText = text.slice(0, text.length - index);
+        textDiv = createTextDiv(splitText)
+        height = getHeight(textDiv);
+        index++;
+    }
+    const nextText = text.slice(index, text.length);
+    const nextTextDiv = createTextDiv(nextText);
+    const nextHeight = getHeight(nextTextDiv);
+    return {
+        preSection: {
+            height,
+            html: textDiv
+        },
+        nextSection: {
+            height: nextHeight,
+            html: nextTextDiv,
+        }
+    }
 }
 
 const generatePages = (sections) => {
@@ -79,19 +102,49 @@ const generatePages = (sections) => {
     let pageIndex = 0;
     sections.forEach((section) => {
         if (isAddingLeft) {
-            if (isFull(COLUMN_HEIGHT, leftColumn, section)) {
+            if (isFull(COLUMN_HEIGHT, leftColumn, section.height)) {
+                const {preSection, nextSection} = splitSection(leftColumn, section.context);
                 isAddingLeft = false;
-                leftColumn = {};
+                leftColumn = {
+                    ...leftColumn,
+                    totalHeight: leftColumn.totalHeight + preSection.height,
+                    sections: appendColumn(leftColumn, preSection),
+                };
+                rightColumn = {
+                    totalHeight: nextSection.height,
+                    sections: [nextSection],
+                };
+
+                pages[pageIndex] = {
+                    leftColumn,
+                    rightColumn,
+                }
             } else {
                 leftColumn = appendColumn(leftColumn, section);
                 pages[pageIndex] = {leftColumn};
             }
         }
         if (!isAddingLeft) {
-            if (isFull(COLUMN_HEIGHT, rightColumn, section)) {
+            if (isFull(COLUMN_HEIGHT, rightColumn, section.height)) {
+                const {preSection, nextSection} = splitSection(leftColumn, section.context);
+                rightColumn = {
+                    ...rightColumn,
+                    totalHeight: rightColumn.totalHeight + preSection.height,
+                    sections: appendColumn(rightColumn, preSection),
+                };
+                pages[pageIndex] = {
+                    ...pages[pageIndex],
+                    rightColumn,
+                }
                 isAddingLeft = true;
                 pageIndex++;
-                rightColumn = {};
+                leftColumn = {
+                    totalHeight: nextSection.height,
+                    sections: [nextSection],
+                };
+                pages[pageIndex] = {
+                    leftColumn,
+                }
             } else {
                 rightColumn = appendColumn(rightColumn, section);
                 pages[pageIndex] = {
@@ -105,11 +158,11 @@ const generatePages = (sections) => {
     return pages;
 }
 
-const isFull = (columnHeight, column, section) => {
+const isFull = (columnHeight, column, sectionHeight) => {
     if (!column.totalHeight) {
         column.totalHeight = 0;
     }
-    if (column.totalHeight + section.height > columnHeight) {
+    if (column.totalHeight + sectionHeight > columnHeight) {
         return true;
     } else {
         return false;
