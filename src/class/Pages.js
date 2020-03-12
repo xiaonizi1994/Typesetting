@@ -17,7 +17,9 @@ export class Page {
     }
 
     createLeftColumn(leftColumns) {
-        if(!leftColumns){
+        console.log("left", leftColumns);
+        console.log("leftColumns.sections", leftColumns.sections);
+        if (!leftColumns) {
             return "";
         }
         const leftSectionsHtml = leftColumns.sections.reduce((pre, section) => pre + section.html, "");
@@ -29,7 +31,7 @@ export class Page {
     }
 
     createRightColumn(rightColumns) {
-        if(!rightColumns){
+        if (!rightColumns) {
             return "";
         }
         const rightColumnsHtml = rightColumns.sections.reduce((pre, section) => pre + section.html, "");

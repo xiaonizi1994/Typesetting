@@ -105,11 +105,7 @@ const generatePages = (sections) => {
             if (isFull(COLUMN_HEIGHT, leftColumn, section.height)) {
                 const {preSection, nextSection} = splitSection(leftColumn, section.context);
                 isAddingLeft = false;
-                leftColumn = {
-                    ...leftColumn,
-                    totalHeight: leftColumn.totalHeight + preSection.height,
-                    sections: appendColumn(leftColumn, preSection),
-                };
+                leftColumn = appendColumn(leftColumn, preSection);
                 rightColumn = {
                     totalHeight: nextSection.height,
                     sections: [nextSection],
@@ -126,12 +122,8 @@ const generatePages = (sections) => {
         }
         if (!isAddingLeft) {
             if (isFull(COLUMN_HEIGHT, rightColumn, section.height)) {
-                const {preSection, nextSection} = splitSection(leftColumn, section.context);
-                rightColumn = {
-                    ...rightColumn,
-                    totalHeight: rightColumn.totalHeight + preSection.height,
-                    sections: appendColumn(rightColumn, preSection),
-                };
+                const {preSection, nextSection} = splitSection(rightColumn, section.context);
+                rightColumn = appendColumn(rightColumn, preSection);
                 pages[pageIndex] = {
                     ...pages[pageIndex],
                     rightColumn,
