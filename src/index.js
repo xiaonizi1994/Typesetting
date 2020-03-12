@@ -1,5 +1,7 @@
 import {TYPE} from "./constants";
 import {data} from "./data";
+import {Page} from "./class/Pages";
+import {COLUMN_HEIGHT, COLUMN_WIDTH, createSectionDiv} from "./utils/renderUtil";
 
 
 const texts = [];
@@ -16,38 +18,15 @@ data.paragraphs.forEach(
 );
 
 
-const margin = 50;
-const gap = 25;
-
-const columnWidth = (document.documentElement.clientWidth) / 2 - margin - gap;
-const columnHeight = (document.documentElement.clientHeight) - 100;
-
 const body = document.getElementsByTagName("body")[0];
-const columnHtml = "<div id ='column'></div>"
+
 const virtualHtml = "<div id = 'virtual'></div>"
-body.innerHTML = columnHtml + virtualHtml;
+body.innerHTML = virtualHtml;
 
 const column = document.getElementById("column");
 const virtual = document.getElementById("virtual");
 
-virtual.style.width = columnWidth + "px";
-
-const createTextDiv = (context) => {
-    return `<div class="section">${context}</div>`
-}
-
-const createImgDiv = (context) => {
-    return `<img class='section' src=${context}/>`
-}
-
-const createSectionDiv = (item) => {
-    if (item.type === TYPE.img) {
-        console.log('dd');
-        return createImgDiv(item.context);
-    }
-    if (item.type === TYPE.text)
-        return createTextDiv(item.context);
-}
+virtual.style.width = COLUMN_WIDTH + "px";
 
 
 const getHeight = (innerHtml) => {
@@ -85,7 +64,7 @@ const renderSections = (sections) => {
 //     const leftColumns = {};
 //     const rightColumns = {};
 //     sections.forEach((section, index)=>{
-//         if(!isFull(columnHeight,leftColumns, sections)){
+//         if(!isFull(COLUMN_HEIGHT,leftColumns, sections)){
 //             appendColumn(leftColumns, section);
 //             return;
 //         }
@@ -100,7 +79,7 @@ const generatePages = (sections) => {
     let pageIndex = 0;
     sections.forEach((section) => {
         if (isAddingLeft) {
-            if (isFull(columnHeight, leftColumn, section)) {
+            if (isFull(COLUMN_HEIGHT, leftColumn, section)) {
                 isAddingLeft = false;
                 leftColumn = {};
             } else {
@@ -109,7 +88,7 @@ const generatePages = (sections) => {
             }
         }
         if (!isAddingLeft) {
-            if (isFull(columnHeight, rightColumn, sections)) {
+            if (isFull(COLUMN_HEIGHT, rightColumn, sections)) {
                 isAddingLeft = true;
                 pageIndex++;
                 rightColumn = {};
@@ -121,10 +100,9 @@ const generatePages = (sections) => {
                 };
             }
         }
-        console.log("left", leftColumn);
-        console.log("right", rightColumn);
     })
     console.log("page", pages);
+    return pages;
 }
 
 const isFull = (columnHeight, column, section) => {
@@ -140,13 +118,22 @@ const isFull = (columnHeight, column, section) => {
 
 const appendColumn = (columns, section) => {
     columns.totalHeight += section.height;
-    if (!columns.section) {
-        columns.section = [];
+    if (!columns.sections) {
+        columns.sections = [];
     }
-    columns.section.push(section);
+    columns.sections.push(section);
     return columns;
 }
 
-setColumnWidth(column, columnWidth);
-// renderSections(sections);
-generatePages(sections);
+const renderPages = (parentElement, pages) => {
+    let pagesHtml = "";
+    pages.forEach(page => {
+        pagesHtml += new Page(page.leftColumn, page.rightColumn, page.pageIndex).renderPage()
+    });
+    parentElement.innerHTML = pagesHtml;
+}
+
+const pages = generatePages(sections);
+console.log("pages", pages);
+renderPages(body, pages);
+

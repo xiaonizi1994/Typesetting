@@ -3,7 +3,24 @@
     padding: 0;
 }
 
+.main {
+    padding: 30px;
+    display: flex;
+}
+
+.left {
+    justify-content: flex-start;
+}
+
+.right {
+    justify-content: flex-end;
+}
+
 .section {
     width: 100%;
     margin-bottom: 30px;
+}
+
+.pageIndex {
+    font-size: 12px;
 }
