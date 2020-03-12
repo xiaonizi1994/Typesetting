@@ -54,11 +54,6 @@ const setColumnWidth = (column, columnWidth) => {
     column.style.width = columnWidth + "px";
 }
 
-const renderSections = (sections) => {
-    const sectionsDiv = sections.reduce((pre, item) => pre + createSectionDiv(item), '');
-    column.innerHTML = sectionsDiv;
-
-}
 //
 // const generateColumns = (sections)=>{
 //     const leftColumns = {};
@@ -88,7 +83,7 @@ const generatePages = (sections) => {
             }
         }
         if (!isAddingLeft) {
-            if (isFull(COLUMN_HEIGHT, rightColumn, sections)) {
+            if (isFull(COLUMN_HEIGHT, rightColumn, section)) {
                 isAddingLeft = true;
                 pageIndex++;
                 rightColumn = {};
@@ -100,7 +95,7 @@ const generatePages = (sections) => {
                 };
             }
         }
-    })
+    });
     console.log("page", pages);
     return pages;
 }
@@ -117,7 +112,7 @@ const isFull = (columnHeight, column, section) => {
 }
 
 const appendColumn = (columns, section) => {
-    columns.totalHeight += section.height;
+    columns.totalHeight += section.height + 30;
     if (!columns.sections) {
         columns.sections = [];
     }
@@ -134,6 +129,5 @@ const renderPages = (parentElement, pages) => {
 }
 
 const pages = generatePages(sections);
-console.log("pages", pages);
 renderPages(body, pages);
 

@@ -26,6 +26,9 @@ export class Page {
     }
 
     createRightColumn(rightColumns) {
+        if(!rightColumns){
+            return "";
+        }
         const rightColumnsHtml = rightColumns.sections.reduce((pre, section) => pre + section.html, "");
         return `
             <div class="right" style="width:${COLUMN_WIDTH}px">
