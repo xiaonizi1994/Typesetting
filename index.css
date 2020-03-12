@@ -5,20 +5,23 @@
 
 .main {
     padding: 30px;
-    display: flex;
+    overflow: hidden;
 }
 
 .left {
-    justify-content: flex-start;
+    float: left;
 }
 
 .right {
-    justify-content: flex-end;
+    float: right;
 }
 
 .section {
     width: 100%;
     margin-bottom: 30px;
+    font-size: 12px;
+    color: #999999;
+    line-height: 30px;
 }
 
 .pageIndex {

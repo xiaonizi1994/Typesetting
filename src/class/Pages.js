@@ -19,7 +19,7 @@ export class Page {
     createLeftColumn(leftColumns) {
         const leftSectionsHtml = leftColumns.sections.reduce((pre, section) => pre + section.html, "");
         return `
-            <div class="left" style="width:${COLUMN_WIDTH}">
+            <div class="left" style="width:${COLUMN_WIDTH}px">
                ${leftSectionsHtml}
             </div>
         `
@@ -28,7 +28,7 @@ export class Page {
     createRightColumn(rightColumns) {
         const rightColumnsHtml = rightColumns.sections.reduce((pre, section) => pre + section.html, "");
         return `
-            <div class="right" style="width:${COLUMN_WIDTH}">
+            <div class="right" style="width:${COLUMN_WIDTH}px">
                ${rightColumnsHtml}
             </div>
         `

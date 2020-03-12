@@ -1,10 +1,10 @@
 import {TYPE} from "../constants";
 
-const margin = 50;
-const gap = 25;
+const margin = 30;
+const gap = 10;
 
-export const COLUMN_WIDTH = (document.documentElement.clientWidth) / 2 - margin - gap;
-export const COLUMN_HEIGHT = (document.documentElement.clientHeight) - 100;
+export const COLUMN_WIDTH = Math.floor(document.documentElement.clientWidth) / 2 - margin - gap;
+export const COLUMN_HEIGHT = Math.floor(document.documentElement.clientHeight) - 100;
 
 export const createTextDiv = (context) => {
     return `<div class="section">${context}</div>`
