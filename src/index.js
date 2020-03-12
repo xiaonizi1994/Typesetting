@@ -43,6 +43,7 @@ const sections = texts.concat(imgs)
         return {
             height,
             html,
+            type: item.type
         }
     });
 console.log("section", sections);
@@ -65,6 +66,10 @@ const setColumnWidth = (column, columnWidth) => {
 //         }
 //             })
 // }
+
+const splitSection = (section, remainHeight) =>{
+
+}
 
 const generatePages = (sections) => {
     let pages = [];
@@ -122,8 +127,8 @@ const appendColumn = (columns, section) => {
 
 const renderPages = (parentElement, pages) => {
     let pagesHtml = "";
-    pages.forEach(page => {
-        pagesHtml += new Page(page.leftColumn, page.rightColumn, page.pageIndex).renderPage()
+    pages.forEach((page, index) => {
+        pagesHtml += new Page(page.leftColumn, page.rightColumn, index).renderPage()
     });
     parentElement.innerHTML = pagesHtml;
 }
