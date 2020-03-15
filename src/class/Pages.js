@@ -1,4 +1,4 @@
-import {COLUMN_WIDTH} from "../utils/renderUtil";
+import {COLUMN_HEIGHT, COLUMN_WIDTH} from "../utils/renderUtil";
 
 export class Page {
     constructor(leftColumns, rightColumns, pageIndex) {
@@ -9,11 +9,13 @@ export class Page {
 
     renderPage() {
         return `
-        <div class="main">
-            ${this.createLeftColumn(this.leftColumns)}
-            ${this.createRightColumn(this.rightColumns)}
-        </div>`
-            + this.createPageIndex(this.pageIndex);
+        <div>
+            <div class="main" style="height: ${COLUMN_HEIGHT}px">
+                ${this.createLeftColumn(this.leftColumns)}
+                ${this.createRightColumn(this.rightColumns)}
+            </div>
+            ${this.createPageIndex(this.pageIndex)}
+         </div>`
     }
 
     createLeftColumn(leftColumns) {

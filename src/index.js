@@ -22,16 +22,13 @@ const body = document.getElementsByTagName("body")[0];
 
 const virtualHtml = "<div id = 'virtual'></div>"
 body.innerHTML = virtualHtml;
-
-const column = document.getElementById("column");
 const virtual = document.getElementById("virtual");
-
 virtual.style.width = COLUMN_WIDTH + "px";
 
 
 const getHeight = (innerHtml) => {
     virtual.innerHTML = innerHtml;
-    const height = virtual.offsetHeight;
+    const height = virtual.offsetHeight + 30;
     return height;
 }
 
@@ -47,52 +44,33 @@ const sections = texts.concat(imgs)
             context: item.context,
         }
     });
-console.log("section", sections);
-
-const columns = [];
-const innerHtml = '';
-
-const setColumnWidth = (column, columnWidth) => {
-    column.style.width = columnWidth + "px";
-}
-
-//
-// const generateColumns = (sections)=>{
-//     const leftColumns = {};
-//     const rightColumns = {};
-//     sections.forEach((section, index)=>{
-//         if(!isFull(COLUMN_HEIGHT,leftColumns, sections)){
-//             appendColumn(leftColumns, section);
-//             return;
-//         }
-//             })
-// }
 
 const splitSection = (column, text) => {
     let splitText = text;
-    let textDiv = createTextDiv(splitText)
-    let height = getHeight(textDiv);
+    let height = 0;
     let index = 0;
-    while (isFull(COLUMN_HEIGHT, column, height)) {
-        splitText = text.slice(0, text.length - index);
-        textDiv = createTextDiv(splitText)
-        height = getHeight(textDiv);
+    while (!isFull(COLUMN_HEIGHT, column, height)) {
         index++;
+        splitText = text.slice(0, index);
+        height = getHeight(createTextDiv(splitText));
     }
-    const nextText = text.slice(text.length - index + 1, text.length);
+    const preText = text.slice(0, index - 1);
+    const preHtml = createTextDiv(preText);
+    const preHeight = getHeight(preHtml);
+    const nextText = text.slice(index-1, text.length);
     const nextTextDiv = createTextDiv(nextText);
     const nextHeight = getHeight(nextTextDiv);
     return {
         preSection: {
-            height,
-            html: textDiv
+            height: preHeight,
+            html: preHtml
         },
         nextSection: {
             height: nextHeight,
             html: nextTextDiv,
         }
     }
-}
+};
 
 const generatePages = (sections) => {
     let pages = [];
@@ -103,10 +81,7 @@ const generatePages = (sections) => {
     sections.forEach((section) => {
         if (isAddingLeft) {
             if (isFull(COLUMN_HEIGHT, leftColumn, section.height)) {
-                console.log("secion", section.context);
                 const {preSection, nextSection} = splitSection(leftColumn, section.context);
-                console.log("presec", preSection);
-                console.log("next", nextSection);
                 isAddingLeft = false;
                 leftColumn = appendColumn(leftColumn, preSection);
                 rightColumn = {
@@ -130,7 +105,7 @@ const generatePages = (sections) => {
                 pages[pageIndex] = {
                     ...pages[pageIndex],
                     rightColumn,
-                }
+                };
                 isAddingLeft = true;
                 pageIndex++;
                 leftColumn = {
@@ -165,10 +140,14 @@ const isFull = (columnHeight, column, sectionHeight) => {
 }
 
 const appendColumn = (columns, section) => {
-    columns.totalHeight += section.height + 30;
+    if (section == null) {
+        return columns;
+    }
     if (!columns.sections) {
         columns.sections = [];
+        columns.totalHeight = -30;
     }
+    columns.totalHeight += section.height;
     columns.sections.push(section);
     return columns;
 }

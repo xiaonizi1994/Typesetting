@@ -50,9 +50,6 @@ export const data = {
         }, {
             type: "text",
             context: "而随着宋的消亡，这一抹天青色，也成了时代的绝唱，如今存世不足百件。"
-        }, {
-            type: "img",
-            context: "./img/1.jpg"
-        },
+        }
     ]
 };
