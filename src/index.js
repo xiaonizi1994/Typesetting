@@ -57,7 +57,7 @@ const splitSection = (column, text) => {
     const preText = text.slice(0, index - 1);
     const preHtml = createTextDiv(preText);
     const preHeight = getHeight(preHtml);
-    const nextText = text.slice(index-1, text.length);
+    const nextText = text.slice(index - 1, text.length);
     const nextTextDiv = createTextDiv(nextText);
     const nextHeight = getHeight(nextTextDiv);
     return {
@@ -97,8 +97,7 @@ const generatePages = (sections) => {
                 leftColumn = appendColumn(leftColumn, section);
                 pages[pageIndex] = {leftColumn};
             }
-        }
-        if (!isAddingLeft) {
+        } else {
             if (isFull(COLUMN_HEIGHT, rightColumn, section.height)) {
                 const {preSection, nextSection} = splitSection(rightColumn, section.context);
                 rightColumn = appendColumn(rightColumn, preSection);
