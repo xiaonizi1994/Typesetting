@@ -26,7 +26,7 @@ const getImgHeight = (innerHtml) => {
     virtual.innerHTML = innerHtml;
     const naturalHeight = virtual.childNodes[0].naturalHeight;
     const naturalWidth = virtual.childNodes[0].naturalWidth;
-    const height = COLUMN_WIDTH/naturalWidth * naturalHeight;
+    const height = COLUMN_WIDTH / naturalWidth * naturalHeight;
     return height + 30;
 }
 
@@ -55,22 +55,26 @@ data.paragraphs
 
 
 const splitSection = (columnHeight, column, text) => {
+    console.log("cohe", columnHeight);
     let splitText = text;
     let height = 0;
     let index = 0;
-    while (!isFull(columnHeight, column, height) && index > 0) {
+    while (!isFull(columnHeight, column, height)) {
         index++;
         splitText = text.slice(0, index);
         height = getTextHeight(createTextDiv(splitText));
     }
 
-    const nextText = text.slice(index, text.length);
+    const preText = text.slice(0, index - 1);
+    const preTextDiv = createTextDiv(preText);
+    const preHeight = getTextHeight(preTextDiv);
+    const nextText = text.slice(index - 1, text.length);
     const nextTextDiv = createTextDiv(nextText);
     const nextHeight = getTextHeight(nextTextDiv);
     return {
         preSection: {
-            height,
-            html: createTextDiv(splitText)
+            height: preHeight,
+            html: preTextDiv
         },
         nextSection: {
             height: nextHeight,
