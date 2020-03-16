@@ -15,7 +15,7 @@ virtual.style.width = COLUMN_WIDTH + "px";
 const texts = [];
 const imgs = [];
 
-const getHeight = (innerHtml) => {
+const getTextHeight = (innerHtml) => {
     virtual.innerHTML = innerHtml;
     const height = virtual.offsetHeight + 30;
     return height;
@@ -30,22 +30,11 @@ const getImgHeight = (innerHtml) => {
     return height + 30;
 }
 
-const generateSection = (item) => {
-    const html = createSectionDiv(item);
-    const height = getHeight(html);
-    return {
-        height,
-        html,
-        type: item.type,
-        context: item.context,
-    }
-}
-
 data.paragraphs
     .forEach(item => {
         if (item.type === TYPE.text) {
             let html = createTextDiv(item.context);
-            let height = getHeight(html);
+            let height = getTextHeight(html);
             texts.push({
                 html,
                 height,
@@ -72,12 +61,12 @@ const splitSection = (columnHeight, column, text) => {
     while (!isFull(columnHeight, column, height) && index > 0) {
         index++;
         splitText = text.slice(0, index);
-        height = getHeight(createTextDiv(splitText));
+        height = getTextHeight(createTextDiv(splitText));
     }
 
     const nextText = text.slice(index, text.length);
     const nextTextDiv = createTextDiv(nextText);
-    const nextHeight = getHeight(nextTextDiv);
+    const nextHeight = getTextHeight(nextTextDiv);
     return {
         preSection: {
             height,

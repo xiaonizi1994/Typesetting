@@ -1,4 +1,5 @@
 import {COLUMN_HEIGHT, COLUMN_WIDTH} from "../utils/renderUtil";
+import {TYPE} from "../constants";
 
 export class Page {
     constructor(leftColumns, rightColumns, pageIndex) {
@@ -19,12 +20,16 @@ export class Page {
     }
 
     createLeftColumn(leftColumns) {
-        console.log("left", leftColumns);
-        console.log("leftColumns.sections", leftColumns.sections);
         if (!leftColumns) {
             return "";
         }
-        const leftSectionsHtml = leftColumns.sections.reduce((pre, section) => pre + section.html, "");
+        const sections = leftColumns.sections;
+        console.log(sections[sections.length - 1]);
+        if (sections[sections.length - 1].type === TYPE.img) {
+            const img = sections.splice(sections.length - 1, 1);
+            sections.splice(1, 0, img[0]);
+        }
+        const leftSectionsHtml = sections.reduce((pre, section) => pre + section.html, "");
         return `
             <div class="left" style="width:${COLUMN_WIDTH}px">
                ${leftSectionsHtml}
