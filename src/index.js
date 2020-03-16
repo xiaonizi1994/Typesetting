@@ -1,21 +1,7 @@
 import {TYPE} from "./constants";
 import {data} from "./data";
 import {Page} from "./class/Pages";
-import {COLUMN_HEIGHT, COLUMN_WIDTH, createSectionDiv, createTextDiv} from "./utils/renderUtil";
-
-
-const texts = [];
-const imgs = [];
-data.paragraphs.forEach(
-    value => {
-        if (value.type === TYPE.text) {
-            texts.push(value);
-        }
-        if (value.type === TYPE.img) {
-            imgs.push(value)
-        }
-    }
-);
+import {COLUMN_HEIGHT, COLUMN_WIDTH, createImgDiv, createSectionDiv, createTextDiv} from "./utils/renderUtil";
 
 
 const body = document.getElementsByTagName("body")[0];
@@ -26,22 +12,33 @@ const virtual = document.getElementById("virtual");
 virtual.style.width = COLUMN_WIDTH + "px";
 
 
+const texts = [];
+const imgs = [];
+
 const getHeight = (innerHtml) => {
     virtual.innerHTML = innerHtml;
     const height = virtual.offsetHeight + 30;
     return height;
 }
 
+const generateSection = (item) => {
+    const html = createSectionDiv(item);
+    const height = getHeight(html);
+    return {
+        height,
+        html,
+        type: item.type,
+        context: item.context,
+    }
+}
 
-const sections = texts.concat(imgs)
-    .map((item) => {
-        const html = createSectionDiv(item);
-        const height = getHeight(html);
-        return {
-            height,
-            html,
-            type: item.type,
-            context: item.context,
+data.paragraphs
+    .map(value => generateSection(value))
+    .forEach(value => {
+        if (value.type === TYPE.text) {
+            texts.push(value)
+        } else {
+            imgs.push(value)
         }
     });
 
@@ -72,16 +69,17 @@ const splitSection = (column, text) => {
     }
 };
 
-const generatePages = (sections) => {
+const generatePages = (texts, imgs) => {
     let pages = [];
     let leftColumn = {};
     let rightColumn = {};
     let isAddingLeft = true;
     let pageIndex = 0;
-    sections.forEach((section) => {
+    let img = imgs.shift();
+    texts.forEach((text) => {
         if (isAddingLeft) {
-            if (isFull(COLUMN_HEIGHT, leftColumn, section.height)) {
-                const {preSection, nextSection} = splitSection(leftColumn, section.context);
+            if (isFull(COLUMN_HEIGHT - img.height, leftColumn, text.height)) {
+                const {preSection, nextSection} = splitSection(leftColumn, text.context);
                 isAddingLeft = false;
                 leftColumn = appendColumn(leftColumn, preSection);
                 rightColumn = {
@@ -93,13 +91,14 @@ const generatePages = (sections) => {
                     leftColumn,
                     rightColumn,
                 }
+                img = imgs.shift();
             } else {
-                leftColumn = appendColumn(leftColumn, section);
+                leftColumn = appendColumn(leftColumn, text);
                 pages[pageIndex] = {leftColumn};
             }
         } else {
-            if (isFull(COLUMN_HEIGHT, rightColumn, section.height)) {
-                const {preSection, nextSection} = splitSection(rightColumn, section.context);
+            if (isFull(COLUMN_HEIGHT -  img.height, rightColumn, text.height)) {
+                const {preSection, nextSection} = splitSection(rightColumn, text.context);
                 rightColumn = appendColumn(rightColumn, preSection);
                 pages[pageIndex] = {
                     ...pages[pageIndex],
@@ -114,8 +113,9 @@ const generatePages = (sections) => {
                 pages[pageIndex] = {
                     leftColumn,
                 }
+                img = imgs.shift();
             } else {
-                rightColumn = appendColumn(rightColumn, section);
+                rightColumn = appendColumn(rightColumn, text);
                 pages[pageIndex] = {
                     ...pages[pageIndex],
                     rightColumn
@@ -138,7 +138,7 @@ const isFull = (columnHeight, column, sectionHeight) => {
     }
 }
 
-const appendColumn = (columns, section) => {
+const appendColumn = (columns, section, insertIndex) => {
     if (section == null) {
         return columns;
     }
@@ -147,7 +147,12 @@ const appendColumn = (columns, section) => {
         columns.totalHeight = -30;
     }
     columns.totalHeight += section.height;
-    columns.sections.push(section);
+    if (insertIndex) {
+        columns.sections.splice(insertIndex, 0, section);
+    } else {
+        columns.sections.push(section);
+
+    }
     return columns;
 }
 
@@ -159,6 +164,6 @@ const renderPages = (parentElement, pages) => {
     parentElement.innerHTML = pagesHtml;
 }
 
-const pages = generatePages(sections);
+const pages = generatePages(texts, imgs);
 renderPages(body, pages);
 
