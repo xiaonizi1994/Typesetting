@@ -10,6 +10,7 @@ import {
     createTitleDiv
 } from "./utils/renderUtil";
 import {Layout} from "./class/Layout";
+import {Template2} from "./class/Template2";
 
 //
 // const body = document.getElementsByTagName("body")[0];
@@ -208,5 +209,6 @@ import {Layout} from "./class/Layout";
 // const pages = generatePages(texts, imgs);
 // renderPages(body, pages);
 
-new Layout().draw();
+// new Layout().draw();
+new Template2().draw();
 
