@@ -39,30 +39,27 @@ const generateDivs = (paragraphs) => {
     const imgs = [];
     paragraphs
         .forEach((item, index) => {
+            let html;
+            let height
             if (item.type === TYPE.text) {
                 if (index == 0) {
-                    let html = createFirstDiv(item.context);
-                    let height = getTextHeight(html);
-                    texts.push({
-                        html,
-                        height,
-                        context: item.context,
-                        type: item.type
-                    })
+                    html = createFirstDiv(item.context);
+                    height = getTextHeight(html);
+
                 } else {
-                    let html = createTextDiv(item.context);
-                    let height = getTextHeight(html);
-                    texts.push({
-                        html,
-                        height,
-                        context: item.context,
-                        type: item.type
-                    })
+                    html = createTextDiv(item.context);
+                    height = getTextHeight(html);
                 }
+                texts.push({
+                    html,
+                    height,
+                    context: item.context,
+                    type: item.type
+                })
 
             } else {
-                let html = createImgDiv(item.context);
-                let height = getImgHeight(html);
+                html = createImgDiv(item.context);
+                height = getImgHeight(html);
                 imgs.push({
                     html,
                     height,
