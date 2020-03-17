@@ -167,7 +167,6 @@ const generatePages = (texts, imgs) => {
             }
         }
     });
-    console.log("page", pages);
     return pages;
 }
 
@@ -182,7 +181,7 @@ const isFull = (columnHeight, column, sectionHeight) => {
     }
 }
 
-const appendColumn = (columns, section, insertIndex) => {
+const appendColumn = (columns, section) => {
     if (section == null) {
         return columns;
     }
@@ -191,12 +190,8 @@ const appendColumn = (columns, section, insertIndex) => {
         columns.totalHeight = -30;
     }
     columns.totalHeight += section.height;
-    if (insertIndex) {
-        columns.sections.splice(insertIndex, 0, section);
-    } else {
-        columns.sections.push(section);
 
-    }
+    columns.sections.push(section);
     return columns;
 }
 
