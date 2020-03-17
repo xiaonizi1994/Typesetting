@@ -16,7 +16,7 @@ export class Page {
                 ${this.createRightColumn(this.rightColumns)}
             </div>
             ${this.createPageIndex(this.pageIndex)}
-         </div>`
+        </div>`
     }
 
     createLeftColumn(leftColumns, pageIndex) {

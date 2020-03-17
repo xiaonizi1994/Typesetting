@@ -1,7 +1,14 @@
 import {TYPE} from "./constants";
 import {data} from "./data";
 import {Page} from "./class/Pages";
-import {COLUMN_HEIGHT, COLUMN_WIDTH, createImgDiv, createTextDiv, createTitleDiv} from "./utils/renderUtil";
+import {
+    COLUMN_HEIGHT,
+    COLUMN_WIDTH,
+    createFirstDiv,
+    createImgDiv,
+    createTextDiv,
+    createTitleDiv
+} from "./utils/renderUtil";
 
 
 const body = document.getElementsByTagName("body")[0];
@@ -31,16 +38,28 @@ const getImgHeight = (innerHtml) => {
 }
 
 data.paragraphs
-    .forEach(item => {
+    .forEach((item, index) => {
         if (item.type === TYPE.text) {
-            let html = createTextDiv(item.context);
-            let height = getTextHeight(html);
-            texts.push({
-                html,
-                height,
-                context: item.context,
-                type: item.type
-            })
+            if (index == 0) {
+                let html = createFirstDiv(item.context);
+                let height = getTextHeight(html);
+                texts.push({
+                    html,
+                    height,
+                    context: item.context,
+                    type: item.type
+                })
+            } else {
+                let html = createTextDiv(item.context);
+                let height = getTextHeight(html);
+                texts.push({
+                    html,
+                    height,
+                    context: item.context,
+                    type: item.type
+                })
+            }
+
         } else {
             let html = createImgDiv(item.context);
             let height = getImgHeight(html);
@@ -59,7 +78,7 @@ const titleSection = {
     html: titleDiv,
     height: titleHeight
 }
-texts.splice(0,0, titleSection);
+texts.splice(0, 0, titleSection);
 
 
 const splitSection = (columnHeight, column, text) => {

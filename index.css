@@ -30,6 +30,11 @@
     color: #333333;
 }
 
+.firstText{
+    font-size: 18px;
+    color: black;
+}
+
 .pageIndex {
     text-align: center;
     color: #999999;
