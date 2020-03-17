@@ -11,6 +11,7 @@ import {
 } from "./utils/renderUtil";
 import {Layout} from "./class/Layout";
 import {Template2} from "./class/Template2";
+import {Template3} from "./class/Template3";
 
 //
 // const body = document.getElementsByTagName("body")[0];
@@ -210,5 +211,5 @@ import {Template2} from "./class/Template2";
 // renderPages(body, pages);
 
 // new Layout().draw();
-new Template2().draw();
+new Template3().draw();
 
