@@ -202,6 +202,15 @@ export class Layout {
     renderPages(pages) {
         let pagesHtml = "";
         pages.forEach((page, index) => {
+            let sections = page.leftColumn.sections;
+            if (sections[sections.length - 1].type === TYPE.img) {
+                const img = sections.splice(sections.length - 1, 1);
+                if (index === 0) {
+                    sections.splice(2, 0, img[0]);
+                } else {
+                    sections.splice(1, 0, img[0]);
+                }
+            }
             pagesHtml += new Page(page.leftColumn, page.rightColumn, index).renderPage()
         });
         this.body.innerHTML = pagesHtml;
