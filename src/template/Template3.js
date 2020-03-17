@@ -1,8 +1,9 @@
-import {Layout} from "./Layout";
+import {Layout} from "../class/Layout";
 import {data} from "../data";
 import {COLUMN_HEIGHT} from "../utils/renderUtil";
 import {TYPE} from "../constants";
-import {Page} from "./Pages";
+import {Page} from "../class/Pages";
+import {Template1} from "./Template1";
 
 export class Template3 extends Layout {
     constructor() {
@@ -100,3 +101,5 @@ export class Template3 extends Layout {
     }
 
 }
+
+new Template3().draw();

@@ -1,13 +1,14 @@
-import {Layout} from "./Layout";
+import {Layout} from "../class/Layout";
 import {data} from "../data";
 import {COLUMN_HEIGHT} from "../utils/renderUtil";
 import {TYPE} from "../constants";
-import {Page} from "./Pages";
+import {Page} from "../class/Pages";
 
-export class Template2 extends Layout{
+export class Template1 extends Layout {
     constructor() {
         super();
     }
+
     generatePages(texts, imgs) {
         let pages = [];
         let leftColumn = {};
@@ -38,10 +39,11 @@ export class Template2 extends Layout{
                     pages[pageIndex] = {leftColumn};
                 }
             } else {
-                let columnHeight = COLUMN_HEIGHT;
+                let columnHeight = COLUMN_HEIGHT - (img ? img.height : 0);
                 if (this.isFull(columnHeight, rightColumn, text.height)) {
                     const {preSection, nextSection} = this.splitSection(columnHeight, rightColumn, text.context);
                     rightColumn = this.appendColumn(rightColumn, preSection);
+                    rightColumn = this.appendColumn(rightColumn, img);
                     pages[pageIndex] = {
                         ...pages[pageIndex],
                         rightColumn,
@@ -55,6 +57,7 @@ export class Template2 extends Layout{
                     pages[pageIndex] = {
                         leftColumn,
                     }
+                    img = imgs.shift();
                 } else {
                     rightColumn = this.appendColumn(rightColumn, text);
                     pages[pageIndex] = {
@@ -89,5 +92,6 @@ export class Template2 extends Layout{
         const pages = this.generatePages(texts, imgs);
         this.renderPages(pages);
     }
-
 }
+
+new Template1().draw();
