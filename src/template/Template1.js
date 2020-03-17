@@ -10,6 +10,7 @@ export class Template1 extends Layout {
     }
 
     generatePages(texts, imgs) {
+        const begin = new Date().getTime();
         let pages = [];
         let leftColumn = {};
         let rightColumn = {};
@@ -67,10 +68,13 @@ export class Template1 extends Layout {
                 }
             }
         });
+        const end = new Date().getTime();
+        console.log('generatePages', end - begin);
         return pages;
     }
 
     renderPages(pages) {
+        const begin = new Date().getTime();
         let pagesHtml = "";
         pages.forEach((page, index) => {
             let sections = page.leftColumn.sections;
@@ -85,6 +89,8 @@ export class Template1 extends Layout {
             pagesHtml += new Page(page.leftColumn, page.rightColumn, index).renderPage()
         });
         this.body.innerHTML = pagesHtml;
+        const end = new Date().getTime();
+        console.log('renderPages', end - begin);
     }
 
     async draw() {

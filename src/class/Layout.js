@@ -41,6 +41,7 @@ export class Layout {
     }
 
     async generateDivs(paragraphs) {
+        const begin = new Date().getTime();
         const texts = [];
         const imgs = [];
         return (async() => {
@@ -82,6 +83,8 @@ export class Layout {
                     height: titleHeight
                 }
                 texts.splice(0, 0, titleSection);
+                const end = new Date().getTime();
+                console.log("generateDivs", end - begin);
                 return {
                     texts,
                     imgs,
