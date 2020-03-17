@@ -84,10 +84,12 @@ export class Template3 extends Layout {
     renderPages(pages) {
         let pagesHtml = "";
         pages.forEach((page, index) => {
-            let sections = page.rightColumn.sections;
-            if (sections[sections.length - 1].type === TYPE.img) {
-                const img = sections.splice(sections.length - 1, 1);
-                sections.splice(2, 0, img[0]);
+            if (page.rightColumn) {
+                let sections = page.rightColumn.sections;
+                if (sections[sections.length - 1].type === TYPE.img) {
+                    const img = sections.splice(sections.length - 1, 1);
+                    sections.splice(2, 0, img[0]);
+                }
             }
             pagesHtml += new Page(page.leftColumn, page.rightColumn, index).renderPage()
         });
