@@ -89,9 +89,7 @@ export class Template1 extends Layout {
 
     async draw() {
         const {texts, imgs} = await this.generateDivs(data.paragraphs);
-        console.log("this.imgs", this.imgs);
         const pages = this.generatePages(texts, imgs);
-        console.log("pages", pages);
         this.renderPages(pages);
     }
 }

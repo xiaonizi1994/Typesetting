@@ -75,6 +75,13 @@ export class Layout {
                         })
                     }
                 }
+                const titleDiv = createTitleDiv(data.title);
+                const titleHeight = this.getTextHeight(titleDiv);
+                const titleSection = {
+                    html: titleDiv,
+                    height: titleHeight
+                }
+                texts.splice(0, 0, titleSection);
                 return {
                     texts,
                     imgs,
