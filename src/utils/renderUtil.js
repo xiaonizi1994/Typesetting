@@ -14,6 +14,10 @@ export const createImgDiv = (context) => {
     return `<img class='section' src=${context}/>`
 }
 
+export const createTitleDiv = (context) => {
+    return `<div class='section title'>${context}</div>`
+}
+
 export const createPageIndex = (pageIndex)=>{
     return `<div class="pageIndex">第${pageIndex+1}页</div>`
 }

@@ -12,22 +12,25 @@ export class Page {
         return `
         <div>
             <div class="main" style="height: ${COLUMN_HEIGHT}px">
-                ${this.createLeftColumn(this.leftColumns)}
+                ${this.createLeftColumn(this.leftColumns, this.pageIndex)}
                 ${this.createRightColumn(this.rightColumns)}
             </div>
             ${this.createPageIndex(this.pageIndex)}
          </div>`
     }
 
-    createLeftColumn(leftColumns) {
+    createLeftColumn(leftColumns, pageIndex) {
         if (!leftColumns) {
             return "";
         }
         const sections = leftColumns.sections;
-        console.log(sections[sections.length - 1]);
         if (sections[sections.length - 1].type === TYPE.img) {
             const img = sections.splice(sections.length - 1, 1);
-            sections.splice(1, 0, img[0]);
+            if (pageIndex === 0) {
+                sections.splice(2, 0, img[0]);
+            } else {
+                sections.splice(1, 0, img[0]);
+            }
         }
         const leftSectionsHtml = sections.reduce((pre, section) => pre + section.html, "");
         return `

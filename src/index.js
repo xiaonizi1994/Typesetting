@@ -1,7 +1,7 @@
 import {TYPE} from "./constants";
 import {data} from "./data";
 import {Page} from "./class/Pages";
-import {COLUMN_HEIGHT, COLUMN_WIDTH, createImgDiv, createSectionDiv, createTextDiv} from "./utils/renderUtil";
+import {COLUMN_HEIGHT, COLUMN_WIDTH, createImgDiv, createTextDiv, createTitleDiv} from "./utils/renderUtil";
 
 
 const body = document.getElementsByTagName("body")[0];
@@ -53,9 +53,16 @@ data.paragraphs
         }
     });
 
+const titleDiv = createTitleDiv(data.title);
+const titleHeight = getTextHeight(titleDiv);
+const titleSection = {
+    html: titleDiv,
+    height: titleHeight
+}
+texts.splice(0,0, titleSection);
+
 
 const splitSection = (columnHeight, column, text) => {
-    console.log("cohe", columnHeight);
     let splitText = text;
     let height = 0;
     let index = 0;
