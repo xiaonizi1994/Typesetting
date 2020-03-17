@@ -19,9 +19,6 @@ const virtual = document.getElementById("virtual");
 virtual.style.width = COLUMN_WIDTH + "px";
 
 
-const texts = [];
-const imgs = [];
-
 const getTextHeight = (innerHtml) => {
     virtual.innerHTML = innerHtml;
     const height = virtual.offsetHeight + 30;
@@ -37,49 +34,55 @@ const getImgHeight = (innerHtml) => {
     return height + 30;
 }
 
-data.paragraphs
-    .forEach((item, index) => {
-        if (item.type === TYPE.text) {
-            if (index == 0) {
-                let html = createFirstDiv(item.context);
-                let height = getTextHeight(html);
-                texts.push({
-                    html,
-                    height,
-                    context: item.context,
-                    type: item.type
-                })
+const generateDivs = (paragraphs) => {
+    const texts = [];
+    const imgs = [];
+    paragraphs
+        .forEach((item, index) => {
+            if (item.type === TYPE.text) {
+                if (index == 0) {
+                    let html = createFirstDiv(item.context);
+                    let height = getTextHeight(html);
+                    texts.push({
+                        html,
+                        height,
+                        context: item.context,
+                        type: item.type
+                    })
+                } else {
+                    let html = createTextDiv(item.context);
+                    let height = getTextHeight(html);
+                    texts.push({
+                        html,
+                        height,
+                        context: item.context,
+                        type: item.type
+                    })
+                }
+
             } else {
-                let html = createTextDiv(item.context);
-                let height = getTextHeight(html);
-                texts.push({
+                let html = createImgDiv(item.context);
+                let height = getImgHeight(html);
+                imgs.push({
                     html,
                     height,
                     context: item.context,
                     type: item.type
                 })
             }
-
-        } else {
-            let html = createImgDiv(item.context);
-            let height = getImgHeight(html);
-            imgs.push({
-                html,
-                height,
-                context: item.context,
-                type: item.type
-            })
-        }
-    });
-
-const titleDiv = createTitleDiv(data.title);
-const titleHeight = getTextHeight(titleDiv);
-const titleSection = {
-    html: titleDiv,
-    height: titleHeight
+        });
+    const titleDiv = createTitleDiv(data.title);
+    const titleHeight = getTextHeight(titleDiv);
+    const titleSection = {
+        html: titleDiv,
+        height: titleHeight
+    }
+    texts.splice(0, 0, titleSection);
+    return {
+        texts,
+        imgs,
+    }
 }
-texts.splice(0, 0, titleSection);
-
 
 const splitSection = (columnHeight, column, text) => {
     let splitText = text;
@@ -132,7 +135,7 @@ const generatePages = (texts, imgs) => {
                 pages[pageIndex] = {
                     leftColumn,
                     rightColumn,
-                }
+                };
                 img = imgs.shift();
             } else {
                 leftColumn = appendColumn(leftColumn, text);
@@ -208,6 +211,7 @@ const renderPages = (parentElement, pages) => {
     parentElement.innerHTML = pagesHtml;
 }
 
+const {texts, imgs} = generateDivs(data.paragraphs);
 const pages = generatePages(texts, imgs);
 renderPages(body, pages);
 
