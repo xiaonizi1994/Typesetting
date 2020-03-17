@@ -1,9 +1,8 @@
 import {Layout} from "../class/Layout";
-import {data} from "../data";
 import {COLUMN_HEIGHT} from "../utils/renderUtil";
 import {TYPE} from "../constants";
 import {Page} from "../class/Pages";
-import {Template1} from "./Template1";
+import {data} from "../data";
 
 export class Template2 extends Layout{
     constructor() {
@@ -85,8 +84,8 @@ export class Template2 extends Layout{
         this.body.innerHTML = pagesHtml;
     }
 
-    draw() {
-        const {texts, imgs} = this.generateDivs(data.paragraphs);
+    async draw() {
+        const {texts, imgs} = await this.generateDivs(data.paragraphs);
         const pages = this.generatePages(texts, imgs);
         this.renderPages(pages);
     }

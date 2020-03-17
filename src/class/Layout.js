@@ -27,61 +27,61 @@ export class Layout {
         return height;
     }
 
-    getImgHeight(innerHtml) {
+    async getImgHeight(innerHtml) {
         this.virtual.innerHTML = null;
         this.virtual.innerHTML = innerHtml;
-        const naturalHeight = this.virtual.childNodes[0].naturalHeight;
-        const naturalWidth = this.virtual.childNodes[0].naturalWidth;
-        const height = COLUMN_WIDTH / naturalWidth * naturalHeight;
-        return height + 30;
+        return new Promise(resolve => {
+            this.virtual.childNodes[0].onload = () => {
+                const naturalHeight = this.virtual.childNodes[0].naturalHeight;
+                const naturalWidth = this.virtual.childNodes[0].naturalWidth;
+                const height = COLUMN_WIDTH / naturalWidth * naturalHeight;
+                resolve(height + 30);
+            }
+        })
     }
 
-    generateDivs(paragraphs) {
+    async generateDivs(paragraphs) {
         const texts = [];
         const imgs = [];
-        paragraphs
-            .forEach((item, index) => {
-                let html;
-                let height
-                if (item.type === TYPE.text) {
-                    if (index == 0) {
-                        html = createFirstDiv(item.context);
-                        height = this.getTextHeight(html);
+        return (async() => {
+                for (let index = 0; index < paragraphs.length; index++) {
+                    let item = paragraphs[index];
+                    let html;
+                    let height
+                    if (item.type === TYPE.text) {
+                        if (index == 0) {
+                            html = createFirstDiv(item.context);
+                            height = this.getTextHeight(html);
+
+                        } else {
+                            html = createTextDiv(item.context);
+                            height = this.getTextHeight(html);
+                        }
+                        texts.push({
+                            html,
+                            height,
+                            context: item.context,
+                            type: item.type
+                        })
 
                     } else {
-                        html = createTextDiv(item.context);
-                        height = this.getTextHeight(html);
+                        html = createImgDiv(item.context);
+                        const data = await this.getImgHeight(html);
+                        imgs.push({
+                            html,
+                            height: data,
+                            context: item.context,
+                            type: item.type
+                        })
                     }
-                    texts.push({
-                        html,
-                        height,
-                        context: item.context,
-                        type: item.type
-                    })
-
-                } else {
-                    html = createImgDiv(item.context);
-                    height = this.getImgHeight(html);
-                    imgs.push({
-                        html,
-                        height,
-                        context: item.context,
-                        type: item.type
-                    })
                 }
-            });
-        const titleDiv = createTitleDiv(data.title);
-        const titleHeight = this.getTextHeight(titleDiv);
-        const titleSection = {
-            html: titleDiv,
-            height: titleHeight
-        }
-        texts.splice(0, 0, titleSection);
-        return {
-            texts,
-            imgs,
-        }
-    }
+                return {
+                    texts,
+                    imgs,
+                }
+            }
+        )();
+    };
 
     splitSection(columnHeight, column, text) {
         let splitText = text;

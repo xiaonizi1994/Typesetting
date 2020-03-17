@@ -96,8 +96,8 @@ export class Template3 extends Layout {
         this.body.innerHTML = pagesHtml;
     }
 
-    draw() {
-        const {texts, imgs} = this.generateDivs(data.paragraphs);
+    async draw() {
+        const {texts, imgs} = await this.generateDivs(data.paragraphs);
         const pages = this.generatePages(texts, imgs);
         this.renderPages(pages);
     }
